@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/btn_rounded.xml" value="0.241" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/full_border.xml" value="0.1425" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/full_border_square.xml" value="0.1425" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/layout_common_list.xml" value="0.2935" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/rounded_top.xml" value="0.241" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/drawable/shape_cell_border.xml" value="0.3333333333333333" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout-v21/activity_main.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_daftar_layanan.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_data_laporan.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_input_buka_bersama.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_input_data_anak.xml" value="0.3621621621621622" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_input_data_petugas.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_input_layanan.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_input_santunan.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_laporan.xml" value="0.6" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_laporan_data_anak.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_laporan_data_donasi.xml" value="0.3087855297157623" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_laporan_data_program.xml" value="0.5095846645367412" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_main.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_masterdata.xml" value="0.4466666666666667" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_program.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/activity_sub_program.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_data_anak.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_data_laporan_anak.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_data_laporan_donasi.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_data_laporan_program.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_data_petugas.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/item_program.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/layout_common_list.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/layout_laporan_data_anak.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/main_daftar_layanan.xml" value="0.3621621621621622" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/main_data_anak.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/toolbar.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/toolbar_collapse.xml" value="0.51328125" />
+        <entry key="..\:/Programming Activity/Project Sampingan/Jul/Project Jul/app/src/main/res/layout/toolbar_jul.xml" value="0.51328125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

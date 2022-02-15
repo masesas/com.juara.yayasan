@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".InputData.input_layanan">
+
+    <include layout="@layout/toolbar_collapse"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/vg_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-50dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@drawable/rounded_top">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextInputLayout"
+                        android:textColorHint="@android:color/black"
+                        app:placeholderTextColor="@android:color/black"
+                        android:layout_marginTop="10dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_nama"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:inputType="textCapSentences"
+                            android:hint="Nama Donatur" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextInputLayout"
+                        android:textColorHint="@android:color/black"
+                        app:placeholderTextColor="@android:color/black"
+                        android:layout_marginTop="15dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_rekening"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:hint="No Rekening" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextInputLayout"
+                        android:textColorHint="@android:color/black"
+                        app:placeholderTextColor="@android:color/black"
+                        android:layout_marginTop="15dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_bank"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:inputType="textCapCharacters"
+                            android:hint="Nama Bank" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextInputLayout"
+                        android:textColorHint="@android:color/black"
+                        app:placeholderTextColor="@android:color/black"
+                        android:layout_marginTop="15dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_jumlah"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:inputType="numberSigned"
+                            android:hint="Jumlah Donasi" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        style="@style/TextInputLayout"
+                        android:textColorHint="@android:color/black"
+                        app:placeholderTextColor="@android:color/black"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp">
+
+                        <EditText
+                            android:id="@+id/input_tanggal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Tanggal"
+                            android:inputType="none"
+                            android:editable="false"
+                            android:focusable="false" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/bt_input_donasi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Simpan"
+                        android:background="@drawable/btn_rounded"
+                        android:textAllCaps="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_gravity="right"
+                        />
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
