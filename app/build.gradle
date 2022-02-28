@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.juara.yayasan"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -51,4 +51,7 @@ dependencies {
     //butter knife
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+
+    //pdf
+    implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
 }

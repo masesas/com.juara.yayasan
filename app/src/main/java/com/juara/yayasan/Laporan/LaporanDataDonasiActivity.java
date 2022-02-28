@@ -13,14 +13,21 @@ import com.juara.yayasan.BaseActivity;
 import com.juara.yayasan.Database.AppDatabase;
 import com.juara.yayasan.Database.DataAnakDAO;
 import com.juara.yayasan.Database.DataAnakEntity;
+import com.juara.yayasan.Database.LayananDAO;
+import com.juara.yayasan.Database.LayananEntity;
 import com.juara.yayasan.R;
+import com.juara.yayasan.Utils.NumberFormatUtils;
 import com.juara.yayasan.adapter.DynamicRecyclerViewAdapter;
 import com.juara.yayasan.adapter.DynamicViewHolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class LaporanDataDonasiActivity extends BaseActivity {
+public class LaporanDataDonasiActivity extends BaseLaporanActivity {
+
+        private List<LayananEntity> layananEntityList;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -29,11 +36,14 @@ public class LaporanDataDonasiActivity extends BaseActivity {
         setContentView(R.layout.activity_laporan_data_donasi);
         setCollapseToolbar("Laporan Transaksi Donasi");
 
-        AppDatabase appDatabase = AppDatabase.getInstance(this);
-        DataAnakDAO dataAnakDAO = appDatabase.dataAnakDAO();
+        reqPermission();
+        initProgress();
 
-        List<DataAnakEntity> dataAnakEntityList = dataAnakDAO.getAll();
-        if(dataAnakEntityList.size() == 0){
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        LayananDAO layananDAO = appDatabase.layananDAO();
+
+        layananEntityList = layananDAO.getAll();
+        if(layananEntityList.size() == 0){
             find(R.id.tv_info).setVisibility(View.VISIBLE);
             find(R.id.vg_table_data).setVisibility(View.GONE);
         }else{
@@ -41,20 +51,49 @@ public class LaporanDataDonasiActivity extends BaseActivity {
             find(R.id.vg_table_data).setVisibility(View.VISIBLE);
         }
 
+        List<String> column = Arrays.asList("Nama Donatur", "No. Rek", "Nama Bank", "Jumlah", "Tanggal");
+        initPdfUtil(generateData(), column, "Data Donasi");
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new DynamicRecyclerViewAdapter<DataAnakEntity>(dataAnakEntityList, R.layout.item_data_laporan_anak){
+        recyclerView.setAdapter(new DynamicRecyclerViewAdapter<LayananEntity>(layananEntityList, R.layout.item_data_laporan_donasi){
             @Override
             public void onBindViewHolder(@NonNull DynamicViewHolder viewHolder, int position) {
                 super.onBindViewHolder(viewHolder, position);
-                viewHolder.findTextView(R.id.tv_nama_anak).setText(dataAnakEntityList.get(position).getNAMA_ANAK());
-                viewHolder.findTextView(R.id.tv_nama_orang_tua).setText(dataAnakEntityList.get(position).getNAMA_ORANG_TUA());
-                viewHolder.findTextView(R.id.tv_jenis_kelamin).setText(dataAnakEntityList.get(position).getJENIS_KELAMIN());
-                viewHolder.findTextView(R.id.tv_tgl_lahir).setText(dataAnakEntityList.get(position).getTANGGAL_LAHIR());
-                viewHolder.findTextView(R.id.tv_asal_kota).setText(dataAnakEntityList.get(position).getASAL_KOTA());
+                viewHolder.findTextView(R.id.tv_nama_donatur).setText(layananEntityList.get(position).getNAMA_DONATUR());
+                viewHolder.findTextView(R.id.tv_no_rek).setText(layananEntityList.get(position).getNO_REKENING());
+                viewHolder.findTextView(R.id.tv_nama_bank).setText(layananEntityList.get(position).getNAMA_BANK());
+                viewHolder.findTextView(R.id.tv_jumlah_donasi).setText(NumberFormatUtils.formatRp(String.valueOf(layananEntityList.get(position).getJUMLAH_DONASI())));
+                viewHolder.findTextView(R.id.tv_tgl).setText(layananEntityList.get(position).getTANGGAL());
             }
         });
         Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+
+        findViewById(R.id.btn_generated_pdf).setOnClickListener(v -> {
+            if (isAllowStoragePermission()) {
+                reqPermission();
+            } else {
+                generatePDF();
+            }
+        });
+    }
+
+    private List<String[]> generateData() {
+        List<String[]> data = new ArrayList<>();
+        if (layananEntityList.size() > 0) {
+            for (int i = 0; i < layananEntityList.size(); i++) {
+                data.add(new String[]
+                        {
+                                layananEntityList.get(i).getNAMA_DONATUR(),
+                                layananEntityList.get(i).getNO_REKENING(),
+                                layananEntityList.get(i).getNAMA_BANK(),
+                                NumberFormatUtils.formatRp(String.valueOf(layananEntityList.get(i).getJUMLAH_DONASI())),
+                                layananEntityList.get(i).getTANGGAL()
+                        }
+                );
+            }
+        }
+        return data;
     }
 }

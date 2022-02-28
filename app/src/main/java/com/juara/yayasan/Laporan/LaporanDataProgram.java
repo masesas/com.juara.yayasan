@@ -20,10 +20,15 @@ import com.juara.yayasan.R;
 import com.juara.yayasan.adapter.DynamicRecyclerViewAdapter;
 import com.juara.yayasan.adapter.DynamicViewHolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class LaporanDataProgram extends BaseActivity {
+public class LaporanDataProgram extends BaseLaporanActivity {
+
+    private List<BukaBersamaEntity> bukaBersamaEntityList;
+    private List<SantunanEntity> santunanEntityList;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -32,12 +37,15 @@ public class LaporanDataProgram extends BaseActivity {
         setContentView(R.layout.activity_laporan_data_program);
         setCollapseToolbar("Laporan Data Program");
 
+        reqPermission();
+        initProgress();
+
         AppDatabase appDatabase = AppDatabase.getInstance(this);
         BukaBersamaDAO bukaBersamaDAO = appDatabase.bukaBersamaDAO();
         SantunanDAO santunanDAO = appDatabase.santunanDAO();
 
-        List<BukaBersamaEntity> bukaBersamaEntityList = bukaBersamaDAO.getAll();
-        List<SantunanEntity> santunanEntityList = santunanDAO.getAll();
+        bukaBersamaEntityList = bukaBersamaDAO.getAll();
+        santunanEntityList = santunanDAO.getAll();
         if (santunanEntityList.size() > 0) {
             for (int i = 0; i < santunanEntityList.size(); i++) {
                 bukaBersamaEntityList.add(new BukaBersamaEntity(
@@ -47,6 +55,9 @@ public class LaporanDataProgram extends BaseActivity {
                 );
             }
         }
+
+        List<String> column = Arrays.asList("Nama Donatur", "Lokasi Acara", "Tanggal");
+        initPdfUtil(generateData(), column, "Data Program");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -62,5 +73,29 @@ public class LaporanDataProgram extends BaseActivity {
         });
 
         Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+
+        findViewById(R.id.btn_generated_pdf).setOnClickListener(v -> {
+            if (isAllowStoragePermission()) {
+                reqPermission();
+            } else {
+                generatePDF();
+            }
+        });
+    }
+
+    private List<String[]> generateData() {
+        List<String[]> data = new ArrayList<>();
+        if (bukaBersamaEntityList.size() > 0) {
+            for (int i = 0; i < bukaBersamaEntityList.size(); i++) {
+                data.add(new String[]
+                        {
+                                bukaBersamaEntityList.get(i).getNAMA_DONATUR(),
+                                bukaBersamaEntityList.get(i).getLOKASI_ACARA(),
+                                bukaBersamaEntityList.get(i).getTANGGAL(),
+                        }
+                );
+            }
+        }
+        return data;
     }
 }

@@ -1,6 +1,11 @@
 package com.juara.yayasan;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -9,14 +14,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.FileProvider;
 import androidx.core.widget.NestedScrollView;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.juara.yayasan.Utils.DialogUtils;
 import com.valdesekamdem.library.mdtoast.MDToast;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -124,15 +132,15 @@ public class BaseActivity extends AppCompatActivity {
         return editText.getText().toString();
     }
 
-    public String textInputEditTextValue(int viewID){
+    public String textInputEditTextValue(int viewID) {
         return getEditText(find(viewID, TextInputEditText.class));
     }
 
-    public EditText findEditText(int viewID){
+    public EditText findEditText(int viewID) {
         return find(viewID, EditText.class);
     }
 
-    public TextView findTextView(int viewID){
+    public TextView findTextView(int viewID) {
         return find(viewID, TextView.class);
     }
 
@@ -164,7 +172,7 @@ public class BaseActivity extends AppCompatActivity {
                             .getLayoutParams();
                     layoutParams.setMargins(0, 0, 0, 0);
                     find(R.id.vg_input, NestedScrollView.class).setLayoutParams(layoutParams);
-                } else if(isShow) {
+                } else if (isShow) {
                     isShow = false;
                     find(R.id.toolbar_layout, CollapsingToolbarLayout.class).setTitle(" ");
                     find(R.id.img_back_collapse).setVisibility(View.GONE);
@@ -176,5 +184,37 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    protected void openGeneratedPDF(File mFile) {
+        try {
+            if (mFile.exists()) {
+                Uri path = FileProvider.getUriForFile(this, getPackageName() + ".provider", mFile);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(path, "application/pdf");
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, "File Tidak Ada", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void showInfoDialog(String tittle, String message, DialogInterface.OnClickListener onClickListenerOK, DialogInterface.OnClickListener onClickListenerNO) {
+        if (onClickListenerOK == null) {
+            onClickListenerOK = (dialog, which) -> dialog.dismiss();
+        }
+        DialogUtils.showDialog(this, tittle, message, "Ya", "Tidak", onClickListenerOK, onClickListenerNO);
     }
 }
