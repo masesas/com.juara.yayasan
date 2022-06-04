@@ -1,11 +1,13 @@
 package com.juara.yayasan.Laporan;
 
 import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 
 import androidx.core.app.ActivityCompat;
@@ -24,7 +26,7 @@ public class BaseLaporanActivity extends BaseActivity {
     private ProgressDialog mProgressDialog;
 
     protected String setFileName() {
-        return Environment.getExternalStorageDirectory().toString() + "/laporan.pdf";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/laporan.pdf";
     }
 
     protected void initPdfUtil(List<String[]> dataList, List<String> dataColumn, String title) {
@@ -56,6 +58,9 @@ public class BaseLaporanActivity extends BaseActivity {
             pdfUtility.generateTable();
         } catch (Exception e) {
             e.printStackTrace();
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
             showError("Error Generated PDF");
         }
     }
@@ -69,8 +74,13 @@ public class BaseLaporanActivity extends BaseActivity {
     }
 
     protected boolean isAllowStoragePermission() {
-        return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
     }
 
     protected void initProgress() {

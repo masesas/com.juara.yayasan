@@ -27,7 +27,7 @@ import java.util.Objects;
 
 public class LaporanDataDonasiActivity extends BaseLaporanActivity {
 
-        private List<LayananEntity> layananEntityList;
+    private List<LayananEntity> layananEntityList;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -43,10 +43,10 @@ public class LaporanDataDonasiActivity extends BaseLaporanActivity {
         LayananDAO layananDAO = appDatabase.layananDAO();
 
         layananEntityList = layananDAO.getAll();
-        if(layananEntityList.size() == 0){
+        if (layananEntityList.size() == 0) {
             find(R.id.tv_info).setVisibility(View.VISIBLE);
             find(R.id.vg_table_data).setVisibility(View.GONE);
-        }else{
+        } else {
             find(R.id.tv_info).setVisibility(View.GONE);
             find(R.id.vg_table_data).setVisibility(View.VISIBLE);
         }
@@ -57,7 +57,7 @@ public class LaporanDataDonasiActivity extends BaseLaporanActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new DynamicRecyclerViewAdapter<LayananEntity>(layananEntityList, R.layout.item_data_laporan_donasi){
+        recyclerView.setAdapter(new DynamicRecyclerViewAdapter<LayananEntity>(layananEntityList, R.layout.item_data_laporan_donasi) {
             @Override
             public void onBindViewHolder(@NonNull DynamicViewHolder viewHolder, int position) {
                 super.onBindViewHolder(viewHolder, position);

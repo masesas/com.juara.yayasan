@@ -10,8 +10,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.itextpdf.text.BaseColor;
@@ -31,9 +31,7 @@ import com.juara.yayasan.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PDFUtility {
@@ -46,6 +44,7 @@ public class PDFUtility {
 
     public interface OnDocumentClose {
         void onStartGenerate();
+
         void onPDFDocumentClose(File file);
     }
 
@@ -93,24 +92,24 @@ public class PDFUtility {
         this.columTable = columTable;
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
 
 
     public void generateTable() {
         try {
-            if(columTable == null){
-                throw  new Exception("Column Kosong");
+            if (columTable == null) {
+                throw new Exception("Column Kosong");
             }
-            if(dataTable == null ){
+            if (dataTable == null) {
                 throw new Exception("Data Kosong");
             }
-            if(title == null){
+            if (title == null) {
                 title = "Laporan";
             }
 
-            if(mCallback != null){
+            if (mCallback != null) {
                 mCallback.onStartGenerate();
             }
 
@@ -121,11 +120,12 @@ public class PDFUtility {
 
             document.open();
             //setMetaData();
-            addHeader(title);
-            addEmptyLine(document, 3);
+            addHeader();
+            addEmptyLine(document, 1);
+            setSubtitle();
+            addEmptyLine(document, 1);
             createDataTable();
             addEmptyLine(document, 2);
-            //createSignBox();
             document.close();
 
             pdfWriter.close();
@@ -135,6 +135,7 @@ public class PDFUtility {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            Log.e("error_lap", ex.getLocalizedMessage());
         }
     }
 
@@ -153,33 +154,34 @@ public class PDFUtility {
         document.addHeader("DEVELOPER", "jul");
     }
 
-    private void addHeader(String subTitle) {
+    private void addHeader() {
         try {
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
             table.setWidths(new float[]{2, 7, 2});
-            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            table.getDefaultCell().setBorder(PdfPCell.BOTTOM);
             table.getDefaultCell().setVerticalAlignment(Element.ALIGN_CENTER);
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 
             PdfPCell cell;
             {
                 /*LEFT TOP LOGO*/
-//            Drawable d = ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher);
-//            Bitmap bmp = ((BitmapDrawable) d).getBitmap();
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.yayasan_2);
+                Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
 
-                //Image logo = Image.getInstance(stream.toByteArray());
-                //logo.setWidthPercentage(80);
-                //logo.scaleToFit(105, 55);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Image logo = Image.getInstance(stream.toByteArray());
+                logo.setWidthPercentage(80);
+                logo.scaleToFit(105, 55);
 
                 cell = new PdfPCell();
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_TOP);
+                cell.setVerticalAlignment(Element.ALIGN_TOP);
                 cell.setUseAscender(true);
-                cell.setBorder(PdfPCell.NO_BORDER);
+                cell.setBorder(PdfPCell.BOTTOM);
                 cell.setPadding(2f);
+                cell.addElement(logo);
                 table.addCell(cell);
             }
 
@@ -187,58 +189,54 @@ public class PDFUtility {
                 /*MIDDLE TEXT*/
                 cell = new PdfPCell();
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                cell.setBorder(PdfPCell.NO_BORDER);
-                cell.setPadding(8f);
+                cell.setBorder(PdfPCell.BOTTOM);
+                cell.setPadding(10f);
                 cell.setUseAscender(true);
 
-                Paragraph temp = new Paragraph("Laporan Yayasan Nurul Awaliyah", FONT_TITLE);
-                temp.setAlignment(Element.ALIGN_CENTER);
-                cell.addElement(temp);
+                Paragraph title = new Paragraph("Yayasan Nurul Awaliyah", FONT_TITLE);
+                title.setAlignment(Element.ALIGN_CENTER);
+                cell.addElement(title);
 
-                temp = new Paragraph(subTitle, FONT_SUBTITLE);
-                temp.setAlignment(Element.ALIGN_CENTER);
-                cell.addElement(temp);
+                Paragraph address = new Paragraph("Jl. Kayu Besar RT. 005/011, Kel. Cengkareng Timur, Kec. Cengkareng, Jakarta Barat", FONT_CELL);
+                address.setAlignment(Element.ALIGN_CENTER);
+                cell.addElement(address);
 
                 table.addCell(cell);
             }
             /* RIGHT TOP LOGO*/
             {
-                PdfPTable logoTable = new PdfPTable(1);
+                cell = new PdfPCell();
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBorder(PdfPCell.BOTTOM);
+                cell.setPadding(10f);
+                cell.setUseAscender(true);
+                table.addCell(cell);
+              /*  PdfPTable logoTable = new PdfPTable(1);
                 logoTable.setWidthPercentage(100);
-                logoTable.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+                logoTable.getDefaultCell().setBorder(PdfPCell.BOTTOM);
                 logoTable.setHorizontalAlignment(Element.ALIGN_CENTER);
                 logoTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_CENTER);
-
-          /*  Drawable drawable = ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher);
-            Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image logo = Image.getInstance(stream.toByteArray());
-            logo.setWidthPercentage(80);
-            logo.scaleToFit(38, 38);*/
 
                 PdfPCell logoCell = new PdfPCell();
                 logoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                logoCell.setBorder(PdfPCell.NO_BORDER);
-
+                logoCell.setBorder(PdfPCell.BOTTOM);
                 logoTable.addCell(logoCell);
 
-                logoCell = new PdfPCell(new Phrase("Logo Text", FONT_CELL));
-                logoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                logoCell.setBorder(PdfPCell.NO_BORDER);
-                logoCell.setPadding(4f);
-                logoTable.addCell(logoCell);
+//                logoCell = new PdfPCell(new Phrase("Logo Text", FONT_CELL));
+//                logoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//                logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                logoCell.setBorder(PdfPCell.NO_BORDER);
+//                logoCell.setPadding(4f);
+//                logoTable.addCell(logoCell);*/
 
-                cell = new PdfPCell(logoTable);
+              /*  cell = new PdfPCell(logoTable);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setUseAscender(true);
                 cell.setBorder(PdfPCell.NO_BORDER);
                 cell.setPadding(2f);
-                table.addCell(cell);
+              ;*/
             }
 
             //Paragraph paragraph=new Paragraph("",new Font(Font.FontFamily.TIMES_ROMAN, 2.0f, Font.NORMAL, BaseColor.BLACK));
@@ -250,6 +248,24 @@ public class PDFUtility {
         }
     }
 
+    private void setSubtitle() throws Exception {
+        PdfPTable subTitleTable = new PdfPTable(1);
+        subTitleTable.setWidthPercentage(100);
+        subTitleTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_CENTER);
+        subTitleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        PdfPCell subTitleCell = new PdfPCell();
+        subTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        subTitleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        subTitleCell.setBorder(PdfPCell.NO_BORDER);
+
+        Paragraph subTitle = new Paragraph("Laporan " + this.title, FONT_TITLE);
+        subTitle.setAlignment(Element.ALIGN_CENTER);
+        subTitleCell.addElement(subTitle);
+        subTitleTable.addCell(subTitleCell);
+
+        document.add(subTitleTable);
+    }
 
     private void createDataTable() throws Exception {
         float[] widhts = new float[columTable.size()];
