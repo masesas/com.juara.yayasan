@@ -201,6 +201,10 @@ public class PDFUtility {
                 address.setAlignment(Element.ALIGN_CENTER);
                 cell.addElement(address);
 
+                Paragraph numberPhone = new Paragraph("No. Telp xxxxxxx", FONT_CELL);
+                numberPhone.setAlignment(Element.ALIGN_CENTER);
+                cell.addElement(numberPhone);
+
                 table.addCell(cell);
             }
             /* RIGHT TOP LOGO*/
