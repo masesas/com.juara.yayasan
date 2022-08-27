@@ -5,11 +5,18 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -26,7 +33,7 @@ public class BaseLaporanActivity extends BaseActivity {
     private ProgressDialog mProgressDialog;
 
     protected String setFileName() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/laporan.pdf";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/laporan.pdf";
     }
 
     protected void initPdfUtil(List<String[]> dataList, List<String> dataColumn, String title) {
@@ -44,6 +51,12 @@ public class BaseLaporanActivity extends BaseActivity {
                 public void onPDFDocumentClose(File file) {
                     mProgressDialog.dismiss();
                     showInfoDialog("Konfirmasi", "Buka File Hasil Generate", (dialog, which) -> openPdf(file), null);
+                }
+
+                @Override
+                public void onFail(String message) {
+                    mProgressDialog.dismiss();
+                    showError("Error " + message);
                 }
             });
             pdfUtility.setColumTable(dataColumn);
@@ -76,8 +89,7 @@ public class BaseLaporanActivity extends BaseActivity {
     protected boolean isAllowStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+                    && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
         }
 
         return true;
@@ -91,11 +103,53 @@ public class BaseLaporanActivity extends BaseActivity {
     }
 
     protected void reqPermission() {
-        if (isAllowStoragePermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE
-                    , READ_EXTERNAL_STORAGE, CAMERA}, 1000);
-        } else {
-            // showWarning("Izinkan Akses Berkas di Pengaturan");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (isAllowStoragePermission()) {
+                ActivityCompat.requestPermissions(this, new String[]{
+                                WRITE_EXTERNAL_STORAGE,
+                                READ_EXTERNAL_STORAGE
+                        },
+                        1000);
+            } else {
+                showWarning("Izinkan Akses Berkas di Pengaturan");
+            }
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    protected void moveSettings() {
+        showInfoDialog("Akses Aplikasi", "Ijinkan Aplikasi Untuk Mengakses Berkas", (dialog, which) -> {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            Uri uri = Uri.fromParts("package", BaseLaporanActivity.this.getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }, (dialog, which) -> {
+            showWarning("PDF Tidak Bisa di Generated, Jika Izin Tidak di Berikan!");
+            dialog.dismiss();
+        });
+    }
+
+    protected void generatePdf() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                generatePDF();
+            } else {
+                moveSettings();
+            }
+        } else {
+            if (isAllowStoragePermission()) {
+                generatePDF();
+            } else {
+                showInfoDialog("Akses Aplikasi", "Ijinkan Aplikasi Untuk Mengakses Berkas",
+                        (dialog, which) -> startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0),
+                        (dialog, which) -> {
+                            showWarning("PDF Tidak Bisa di Generated, Jika Izin Tidak di Berikan!");
+                            dialog.dismiss();
+                        });
+
+            }
+        }
+    }
+
 }

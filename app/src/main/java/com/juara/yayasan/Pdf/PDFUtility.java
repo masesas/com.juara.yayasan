@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -46,6 +47,8 @@ public class PDFUtility {
         void onStartGenerate();
 
         void onPDFDocumentClose(File file);
+
+        void onFail(String message);
     }
 
     private Context context;
@@ -69,14 +72,25 @@ public class PDFUtility {
         File file = new File(filePath);
         try {
             if (file.exists()) {
-                file.delete();
-                Thread.sleep(50);
+                boolean isDelete = file.delete();
+                if(isDelete){
+                    Log.d("laporan", "file " + filePath + " id deleted");
+                }
             }
+
+            /*if(!file.exists()){
+                boolean isCreate = file.mkdir();
+                if(isCreate){
+                    Log.d("laporan", "file " + filePath + " id created");
+                }
+            }*/
+
             document = new Document();
             document.setMargins(24f, 24f, 32f, 32f);
             document.setPageSize(isPortrait ? PageSize.A4 : PageSize.A4.rotate());
         } catch (Exception e) {
             e.printStackTrace();
+            mCallback.onFail(e.getMessage());
         }
     }
 
@@ -135,6 +149,7 @@ public class PDFUtility {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            mCallback.onFail(ex.getMessage());
             Log.e("error_lap", ex.getLocalizedMessage());
         }
     }
@@ -166,7 +181,7 @@ public class PDFUtility {
             PdfPCell cell;
             {
                 /*LEFT TOP LOGO*/
-                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.yayasan_2);
+                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_logo_yayasan);
                 Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -201,7 +216,7 @@ public class PDFUtility {
                 address.setAlignment(Element.ALIGN_CENTER);
                 cell.addElement(address);
 
-                Paragraph numberPhone = new Paragraph("No. Telp xxxxxxx", FONT_CELL);
+                Paragraph numberPhone = new Paragraph("No. Telp 081384397505", FONT_CELL);
                 numberPhone.setAlignment(Element.ALIGN_CENTER);
                 cell.addElement(numberPhone);
 
@@ -311,9 +326,8 @@ public class PDFUtility {
         for (int i = 0; i < dataTable.size(); i++) {
             cell_color = alternate ? lt_gray : BaseColor.WHITE;
             String[] temp = dataTable.get(i);
-            for (int j = 0; j < temp.length; j++) {
-                String var = temp[j];
-                cell = new PdfPCell(new Phrase(temp[j], FONT_CELL));
+            for (String var : temp) {
+                cell = new PdfPCell(new Phrase(var, FONT_CELL));
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setPaddingLeft(left_right_Padding);

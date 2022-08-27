@@ -1,12 +1,15 @@
 package com.juara.yayasan.Laporan;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 
 import com.juara.yayasan.BaseActivity;
@@ -71,11 +74,7 @@ public class LaporanDataDonasiActivity extends BaseLaporanActivity {
         Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
 
         findViewById(R.id.btn_generated_pdf).setOnClickListener(v -> {
-            if (isAllowStoragePermission()) {
-                reqPermission();
-            } else {
-                generatePDF();
-            }
+            generatePdf();
         });
     }
 

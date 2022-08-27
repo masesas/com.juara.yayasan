@@ -1,12 +1,15 @@
 package com.juara.yayasan.Laporan;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.juara.yayasan.BaseActivity;
 import com.juara.yayasan.Database.AppDatabase;
@@ -30,6 +33,7 @@ public class LaporanDataProgram extends BaseLaporanActivity {
     private List<BukaBersamaEntity> bukaBersamaEntityList;
     private List<SantunanEntity> santunanEntityList;
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +79,7 @@ public class LaporanDataProgram extends BaseLaporanActivity {
         Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
 
         findViewById(R.id.btn_generated_pdf).setOnClickListener(v -> {
-            if (isAllowStoragePermission()) {
-                reqPermission();
-            } else {
-                generatePDF();
-            }
+            generatePdf();
         });
     }
 

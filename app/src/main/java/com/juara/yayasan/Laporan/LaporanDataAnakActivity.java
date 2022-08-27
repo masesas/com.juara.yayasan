@@ -5,15 +5,21 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +45,7 @@ public class LaporanDataAnakActivity extends BaseLaporanActivity {
 
     private List<DataAnakEntity> dataAnakEntityList;
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +88,7 @@ public class LaporanDataAnakActivity extends BaseLaporanActivity {
         Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
 
         findViewById(R.id.btn_generated_pdf).setOnClickListener(v -> {
-            if (isAllowStoragePermission()) {
-                reqPermission();
-            } else {
-                generatePDF();
-            }
+            generatePdf();
         });
     }
 
