@@ -22,7 +22,7 @@ public class PageNumeration extends PdfPageEventHelper {
     @Override
     public void onEndPage(PdfWriter writer, Document document) {
         try {
-            PdfPCell cell;
+           /* PdfPCell cell;
             PdfPTable table = new PdfPTable(2);
             table.setWidthPercentage(100);
             table.setWidths(new float[]{3, 1});
@@ -40,13 +40,13 @@ public class PageNumeration extends PdfPageEventHelper {
             table.writeSelectedRows(0, -1, document.leftMargin(), document.bottomMargin() - 5, writer.getDirectContent());
 
             //2nd Column
-            cell = new PdfPCell(new Phrase("Page - ".concat(String.valueOf(writer.getPageNumber())), FONT_FOOTER));
+            cell = new PdfPCell(new Phrase("Halaman - ".concat(String.valueOf(writer.getPageNumber())), FONT_FOOTER));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell.setBorder(0);
             cell.setPadding(2f);
             table.addCell(cell);
             table.setTotalWidth(document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin());
-            table.writeSelectedRows(0, -1, document.leftMargin(), document.bottomMargin() - 5, writer.getDirectContent());
+            table.writeSelectedRows(0, -1, document.leftMargin(), document.bottomMargin() - 5, writer.getDirectContent());*/
         } catch (Exception ex) {
             ex.printStackTrace();
             //Log.e(TAG, ex.toString());

@@ -1,5 +1,6 @@
 package com.juara.yayasan.Pdf;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -24,15 +26,19 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.Barcode128;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.juara.yayasan.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class PDFUtility {
@@ -139,7 +145,8 @@ public class PDFUtility {
             setSubtitle();
             addEmptyLine(document, 1);
             createDataTable();
-            addEmptyLine(document, 2);
+            addEmptyLine(document, 10);
+            createSignBox();
             document.close();
 
             pdfWriter.close();
@@ -208,7 +215,7 @@ public class PDFUtility {
                 cell.setPadding(10f);
                 cell.setUseAscender(true);
 
-                Paragraph title = new Paragraph("Yayasan Nurul Awaliyah", FONT_TITLE);
+                Paragraph title = new Paragraph("Yayasan Nurul Ikhlas Awaliyah", FONT_TITLE);
                 title.setAlignment(Element.ALIGN_CENTER);
                 cell.addElement(title);
 
@@ -347,9 +354,11 @@ public class PDFUtility {
     private void createSignBox() throws DocumentException {
         PdfPTable outerTable = new PdfPTable(1);
         outerTable.setWidthPercentage(100);
+        outerTable.setHorizontalAlignment(Element.ALIGN_BOTTOM);
         outerTable.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 
         PdfPTable innerTable = new PdfPTable(2);
+        LineSeparator line = new LineSeparator(-1, 50, null, Element.ALIGN_LEFT, -30);
         {
             innerTable.setWidthPercentage(100);
             innerTable.setWidths(new float[]{1, 1});
@@ -369,35 +378,57 @@ public class PDFUtility {
 
             //ROW-3 : Content Left Aligned
             cell = new PdfPCell();
-            Paragraph temp = new Paragraph(new Phrase("Signature of Supervisor", FONT_SUBTITLE));
+            Paragraph temp = new Paragraph(new Phrase("Petugas \n\n", FONT_SUBTITLE));
+            temp.setAlignment(Element.ALIGN_CENTER);
+            temp.add(line);
+            temp.setPaddingTop(2f);
             cell.addElement(temp);
-
-            temp = new Paragraph(new Phrase("( RAVEESH G S )", FONT_SUBTITLE));
-            temp.setPaddingTop(4f);
-            temp.setAlignment(Element.ALIGN_LEFT);
-            cell.addElement(temp);
-
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBorder(PdfPCell.NO_BORDER);
             cell.setPadding(4f);
             innerTable.addCell(cell);
 
             //ROW-4 : Content Right Aligned
-            cell = new PdfPCell(new Phrase("Signature of Staff ", FONT_SUBTITLE));
+            /*cell = new PdfPCell(new Phrase("Bogor, " + currentDate(), FONT_SUBTITLE));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            cell.setPadding(4f);*/
+
+            cell = new PdfPCell();
+            temp = new Paragraph(new Phrase("Bogor, " + currentDate() + "\nPimpinan\n", FONT_SUBTITLE));
+            temp.setAlignment(Element.ALIGN_CENTER);
+            temp.add(line);
+            temp.setPaddingTop(2f);
+            cell.addElement(temp);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBorder(PdfPCell.NO_BORDER);
             cell.setPadding(4f);
             innerTable.addCell(cell);
         }
 
         PdfPCell signRow = new PdfPCell(innerTable);
-        signRow.setHorizontalAlignment(Element.ALIGN_LEFT);
+        signRow.setHorizontalAlignment(Element.ALIGN_CENTER);
         signRow.setBorder(PdfPCell.NO_BORDER);
-        signRow.setPadding(4f);
+        signRow.setPadding(10f);
 
         outerTable.addCell(signRow);
 
         document.add(outerTable);
+    }
+
+    private PdfPCell newPdfPcel(Paragraph paragraph,float fixedHight){
+        PdfPCell pdfPCell = new PdfPCell();
+        pdfPCell.addElement(paragraph);
+        pdfPCell.setBorder(Rectangle.NO_BORDER);
+        pdfPCell.setFixedHeight(fixedHight);
+        return pdfPCell;
+    }
+
+    private String currentDate(){
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+        return simpleDateFormat.format(calendar.getTime());
     }
 
     private static Image getImage(byte[] imageByte, boolean isTintingRequired) throws Exception {
